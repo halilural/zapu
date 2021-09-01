@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  zapu-db:
+    networks:
+      - backend
+    image: mongo:latest
+    container_name: zapu-db
+    volumes:
+      - zapu_db:/data
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8082:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: zapu-db
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+    networks: 
+      - backend
+  zapu-app:
+    networks:
+      - backend
+    image: zapu-app
+    build: 
+      context: ./zapu-backend
+      dockerfile: Dockerfile
+    container_name: zapu-app
+    ports:
+      - 8080:8080
+    links:
+      - zapu-db
+
+volumes: 
+  zapu_db:
+
+networks:
+  backend:
+    external: false
+    name: backend

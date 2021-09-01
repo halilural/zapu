@@ -30,8 +30,7 @@ public class UserController {
         if (result.hasErrors()) {
             return "register";
         } else {
-            userService.saveUser(user);
-
+            userService.create(user);
         }
         return "index";
     }

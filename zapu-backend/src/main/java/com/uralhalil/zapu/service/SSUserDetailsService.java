@@ -1,6 +1,5 @@
 package com.uralhalil.zapu.service;
 
-import com.uralhalil.zapu.model.Role;
 import com.uralhalil.zapu.model.User;
 import com.uralhalil.zapu.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,11 +42,8 @@ public class SSUserDetailsService implements UserDetailsService {
 
     private Set<GrantedAuthority> getAuthorities(User user) {
         Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-        for (Role role : user.getRoles()) {
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getRole());
-            authorities.add(grantedAuthority);
-        }
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(user.getRole().getRole());
+        authorities.add(grantedAuthority);
         return authorities;
-
     }
 }
