@@ -1,5 +1,6 @@
 package com.uralhalil.zapu.controller;
 
+import com.uralhalil.zapu.exception.NotFoundException;
 import com.uralhalil.zapu.model.Category;
 import com.uralhalil.zapu.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +24,22 @@ public class CategoryController {
     }
 
     @GetMapping("/{name}")
-    public Category getList(@PathVariable("name") String name) {
-        return service.read(name);
+    public Category getSingle(@PathVariable("name") String name) {
+        Category category = null;
+        try {
+            category = service.read(name);
+        } catch (NotFoundException exception) {
+        }
+        return category;
     }
 
     @PostMapping
-    public Boolean create(@Valid @RequestBody String name) {
-        return service.create(name);
+    public Category create(@Valid @RequestBody Category category) {
+        return service.create(category);
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity<?> delete(@PathVariable("name") String name) {
+    public ResponseEntity<?> delete(@PathVariable("name") String name) throws NotFoundException {
         service.delete(name);
         return ResponseEntity.ok().build();
     }

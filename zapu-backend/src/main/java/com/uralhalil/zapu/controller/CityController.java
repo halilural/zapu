@@ -1,5 +1,6 @@
 package com.uralhalil.zapu.controller;
 
+import com.uralhalil.zapu.exception.NotFoundException;
 import com.uralhalil.zapu.model.City;
 import com.uralhalil.zapu.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,25 @@ public class CityController {
     }
 
     @GetMapping("/{name}")
-    public City getList(@PathVariable("name") String name) {
-        return service.read(name);
+    public City getSingle(@PathVariable("name") String name) {
+        City city = null;
+        try {
+            city = service.read(name);
+        } catch (NotFoundException exception) {
+        }
+        return city;
     }
 
     @PostMapping
-    public Boolean create(@Valid @RequestBody String name) {
-        return service.create(name);
+    public City create(@Valid @RequestBody City city) {
+        return service.create(city);
     }
 
     @DeleteMapping("/{name}")
-    public ResponseEntity<?> delete(@PathVariable("name") String name) {
+    public ResponseEntity<?> delete(@PathVariable("name") String name) throws NotFoundException {
         service.delete(name);
         return ResponseEntity.ok().build();
     }
+
 
 }

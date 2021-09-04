@@ -21,4 +21,7 @@ public class Category {
     @Field(name = "name")
     private String name;
 
+    public Category(String name) {
+        this.name = name;
+    }
 }
