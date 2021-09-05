@@ -38,6 +38,8 @@ public class PropertyService {
     }
 
     public Property create(Property property) {
+        if(property == null)
+            return null;
         Property existing = null;
         try {
             existing = read(property.getId());
