@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.uralhalil.zapu.exception.NotFoundException;
 import com.uralhalil.zapu.exception.QueryDSLPredicateBuildException;
 import com.uralhalil.zapu.model.Property;
+import com.uralhalil.zapu.payload.PropertyResponse;
 import com.uralhalil.zapu.predicate.builder.QueryDSLPredicatesBuilder;
 import com.uralhalil.zapu.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class PropertyController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
-    public Page<Property> search(Pageable pageable, @RequestParam(value = "search") String search) throws QueryDSLPredicateBuildException {
+    public Page<PropertyResponse> search(Pageable pageable, @RequestParam(value = "search") String search) throws QueryDSLPredicateBuildException {
         QueryDSLPredicatesBuilder builder = new QueryDSLPredicatesBuilder(Property.class);
         if (search != null) {
             Pattern pattern = Pattern.compile("([^=,]+):([^,]*)", Pattern.CASE_INSENSITIVE);

@@ -4,12 +4,14 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.uralhalil.zapu.exception.NotFoundException;
 import com.uralhalil.zapu.model.Currency;
 import com.uralhalil.zapu.model.Property;
+import com.uralhalil.zapu.payload.PropertyResponse;
 import com.uralhalil.zapu.repository.CategoryRepository;
 import com.uralhalil.zapu.repository.CityRepository;
 import com.uralhalil.zapu.repository.PropertyRepository;
 import com.uralhalil.zapu.repository.PropertySearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -17,6 +19,7 @@ import org.thymeleaf.util.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PropertyService {
@@ -103,9 +106,34 @@ public class PropertyService {
         return optionalProperty.get();
     }
 
-    public Page<Property> search(Pageable pageable, BooleanExpression exp) {
+    public Page<PropertyResponse> search(Pageable pageable, BooleanExpression exp) {
+
+        Page<Property> propertyPage;
+
         if (exp == null)
-            return propertySearchRepository.findAll(pageable);
-        return propertySearchRepository.findAll(exp, pageable);
+            propertyPage = propertySearchRepository.findAll(pageable);
+        else {
+            propertyPage = propertySearchRepository.findAll(exp, pageable);
+        }
+
+        if (propertyPage == null)
+            return null;
+
+        int totalElements = (int) propertyPage.getTotalElements();
+        return new PageImpl<PropertyResponse>(propertyPage.getContent()
+                .stream()
+                .map(property -> {
+                    PropertyResponse response = PropertyResponse.builder()
+                            .id(property.getId())
+                            .category(property.getCategory())
+                            .city(property.getCity())
+                            .currency(property.getCurrency())
+                            .price(property.getPrice())
+                            .title(property.getTitle())
+                            //TODO: rootUrl will be implemented
+                            .build();
+                    return response;
+                })
+                .collect(Collectors.toList()), pageable, totalElements);
     }
 }
