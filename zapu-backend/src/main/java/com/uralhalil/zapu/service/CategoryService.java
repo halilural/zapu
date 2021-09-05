@@ -77,4 +77,8 @@ public class CategoryService {
         return true;
     }
 
+    public void deleteAll(){
+        categoryRepository.deleteAll();
+    }
+
 }

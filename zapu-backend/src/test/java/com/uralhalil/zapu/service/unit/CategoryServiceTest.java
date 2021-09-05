@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
+import static com.uralhalil.zapu.service.util.TestConstant.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,12 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser(username = "halil", password = "123456", roles = "USER")
 class CategoryServiceTest {
-
-    private static final String CATEGORY_NAME_BOOK = "Book";
-    private static final String CATEGORY_NAME_NOTEBOOK = "Notebook";
-    private static final String CATEGORY_NAME_ERASER = "Eraser";
-    private static final String CATEGORY_NAME_NOT_FOUND = "NotFound";
-    private static final String API_CATEGORY_PATH = "/api/categories";
 
     @Autowired
     MockMvc mockMvc;

@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.*;
 
+import static com.uralhalil.zapu.service.util.TestConstant.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,12 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser(username = "halil", password = "123456", roles = "USER")
 class CityServiceTest {
-
-    private static final String CITY_NAME_ISTANBUL = "İstanbul";
-    private static final String CITY_NAME_ANKARA = "Ankara";
-    private static final String CITY_NAME_IZMIR = "İzmir";
-    private static final String CITY_NAME_NOT_FOUND = "NotFound";
-    private static final String API_CITY_PATH = "/api/cities";
 
     @Autowired
     MockMvc mockMvc;
