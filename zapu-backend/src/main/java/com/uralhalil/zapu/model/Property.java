@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.NotNull;
+
 @Builder
 @Document(collection = "property")
 @Data
@@ -19,21 +21,32 @@ public class Property {
     @Id
     private String id;
 
+    @NotNull(message = "Kategori alanı zorunludur!")
     @DBRef
     @Field(name = "category")
     private Category category;
 
+    @NotNull(message = "Başlık alanı zorunludur!")
     @Field(name = "title")
     private String title;
 
+    @NotNull(message = "Şehir alanı zorunludur!")
     @DBRef
     @Field(name = "city")
     private City city;
 
+    @NotNull(message = "Fiyat alanı zorunludur!")
     @Field(name = "price")
     private Double price;
 
+    @NotNull(message = "Para birimi alanı zorunludur!")
     @Field(name = "currency")
     private Currency currency;
 
+    public Property(String id, String title, Double price, Currency currency) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.currency = currency;
+    }
 }

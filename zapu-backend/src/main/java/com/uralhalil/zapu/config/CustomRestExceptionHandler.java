@@ -85,8 +85,8 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(
-            NotFoundException ex, WebRequest request) {
+    public ResponseEntity<Object> handleNotFound(
+            NotFoundException ex) {
         List<String> errors = new ArrayList<>();
         String error = ex.getMessage();
         errors.add(error);

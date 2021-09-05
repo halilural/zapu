@@ -58,7 +58,7 @@ public class CategoryService {
             throw new NotFoundException();
         Optional<Category> optionalCategory = categoryRepository.findByName(name);
         if (optionalCategory == null || !optionalCategory.isPresent())
-            throw new NotFoundException(String.format("Category with Name %s does not exist.", name));
+            throw new NotFoundException("Category", "Name", name);
         return optionalCategory.get();
     }
 
@@ -69,15 +69,11 @@ public class CategoryService {
     public Boolean delete(String name) throws NotFoundException {
         if (StringUtils.isEmpty(name))
             return false;
-        Category existingCategory = read(name);
-        if (existingCategory == null) {
-            return false;
-        }
-        categoryRepository.delete(existingCategory);
+        categoryRepository.delete(read(name));
         return true;
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         categoryRepository.deleteAll();
     }
 

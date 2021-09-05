@@ -58,7 +58,7 @@ public class CityService {
             throw new NotFoundException();
         Optional<City> optionalCity = cityRepository.findByName(name);
         if (optionalCity == null || !optionalCity.isPresent())
-            throw new NotFoundException(String.format("City with Name %s does not exist.", name));
+            throw new NotFoundException("City", "Name", name);
         return optionalCity.get();
     }
 
@@ -69,11 +69,7 @@ public class CityService {
     public Boolean delete(String name) throws NotFoundException {
         if (StringUtils.isEmpty(name))
             return false;
-        City existingCity = read(name);
-        if (existingCity == null) {
-            return false;
-        }
-        cityRepository.delete(existingCity);
+        cityRepository.delete(read(name));
         return true;
     }
 

@@ -43,10 +43,9 @@ class CategoryServiceTest {
     @MockBean
     CategoryRepository categoryRepository;
 
-    Category RECORD_1 = new Category(UUID.randomUUID().toString(), CATEGORY_NAME_BOOK);
-    Category RECORD_2 = new Category(UUID.randomUUID().toString(), CATEGORY_NAME_NOTEBOOK);
-    Category RECORD_3 = new Category(UUID.randomUUID().toString(), CATEGORY_NAME_ERASER);
-
+    final Category RECORD_1 = new Category(UUID.randomUUID().toString(), CATEGORY_NAME_BOOK);
+    final Category RECORD_2 = new Category(UUID.randomUUID().toString(), CATEGORY_NAME_NOTEBOOK);
+    final Category RECORD_3 = new Category(UUID.randomUUID().toString(), CATEGORY_NAME_ERASER);
 
     @Test
     public void getAllRecords_success() throws Exception {
@@ -73,15 +72,11 @@ class CategoryServiceTest {
 
     @Test
     public void createRecord_success() throws Exception {
-        Category record = Category.builder()
-                .id(UUID.randomUUID().toString())
-                .name(CATEGORY_NAME_BOOK)
-                .build();
-        Mockito.when(categoryRepository.save(record)).thenReturn(record);
+        Mockito.when(categoryRepository.save(RECORD_1)).thenReturn(RECORD_1);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post(API_CATEGORY_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(record));
+                .content(this.mapper.writeValueAsString(RECORD_1));
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
@@ -164,9 +159,9 @@ class CategoryServiceTest {
 
     @Test
     public void deleteCategoryByName_notFound() throws Exception {
-        Mockito.when(categoryRepository.findByName(CATEGORY_NAME_NOT_FOUND)).thenReturn(null);
+        Mockito.when(categoryRepository.findByName(NOT_FOUND)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders
-                .delete(API_CATEGORY_PATH + "/" + CATEGORY_NAME_NOT_FOUND)
+                .delete(API_CATEGORY_PATH + "/" + NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(result ->

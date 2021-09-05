@@ -13,6 +13,10 @@ public class NotFoundException extends Exception {
         super(message);
     }
 
+    public NotFoundException(String resource, String field, String value) {
+        super(String.format("%s with %s %s does not exist.", resource, field, value));
+    }
+
     public NotFoundException() {
     }
 }

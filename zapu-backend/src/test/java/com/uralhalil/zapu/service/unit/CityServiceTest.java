@@ -42,9 +42,9 @@ class CityServiceTest {
     @MockBean
     CityRepository cityRepository;
 
-    City RECORD_1 = new City(UUID.randomUUID().toString(), CITY_NAME_ISTANBUL);
-    City RECORD_2 = new City(UUID.randomUUID().toString(), CITY_NAME_ANKARA);
-    City RECORD_3 = new City(UUID.randomUUID().toString(), CITY_NAME_IZMIR);
+    final City RECORD_1 = new City(UUID.randomUUID().toString(), CITY_NAME_ISTANBUL);
+    final City RECORD_2 = new City(UUID.randomUUID().toString(), CITY_NAME_ANKARA);
+    final City RECORD_3 = new City(UUID.randomUUID().toString(), CITY_NAME_IZMIR);
 
 
     @Test
@@ -72,15 +72,11 @@ class CityServiceTest {
 
     @Test
     public void createRecord_success() throws Exception {
-        City record = City.builder()
-                .id(UUID.randomUUID().toString())
-                .name(CITY_NAME_ISTANBUL)
-                .build();
-        Mockito.when(cityRepository.save(record)).thenReturn(record);
+        Mockito.when(cityRepository.save(RECORD_1)).thenReturn(RECORD_1);
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post(API_CITY_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(record));
+                .content(this.mapper.writeValueAsString(RECORD_1));
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", notNullValue()))
@@ -163,9 +159,9 @@ class CityServiceTest {
 
     @Test
     public void deleteCityByName_notFound() throws Exception {
-        Mockito.when(cityRepository.findByName(CITY_NAME_NOT_FOUND)).thenReturn(null);
+        Mockito.when(cityRepository.findByName(NOT_FOUND)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders
-                .delete(API_CITY_PATH + "/" + CITY_NAME_NOT_FOUND)
+                .delete(API_CITY_PATH + "/" + NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(result ->

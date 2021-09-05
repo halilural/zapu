@@ -24,7 +24,7 @@ class CategoryServiceTest {
     private CategoryService categoryService;
 
     @BeforeEach
-    void tearDownBefore() {
+    void setup() {
         try {
             categoryService.delete(CATEGORY_NAME_BOOK);
         } catch (NotFoundException exception) {
@@ -33,7 +33,7 @@ class CategoryServiceTest {
     }
 
     @AfterEach
-    void tearDownAfter() {
+    void tearDown() {
         try {
             categoryService.delete(CATEGORY_NAME_BOOK);
         } catch (NotFoundException exception) {

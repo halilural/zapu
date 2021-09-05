@@ -24,7 +24,7 @@ class CityServiceTest {
     private CityService cityService;
 
     @BeforeEach
-    void tearDownBefore() {
+    void setup() {
         try {
             cityService.delete(CITY_NAME_IZMIR);
         } catch (NotFoundException exception) {
@@ -33,7 +33,7 @@ class CityServiceTest {
     }
 
     @AfterEach
-    void tearDownAfter() {
+    void tearDown() {
         try {
             cityService.delete(CITY_NAME_IZMIR);
         } catch (NotFoundException exception) {

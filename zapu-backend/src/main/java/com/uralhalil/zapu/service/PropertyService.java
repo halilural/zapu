@@ -1,6 +1,10 @@
 package com.uralhalil.zapu.service;
 
+import com.uralhalil.zapu.exception.NotFoundException;
+import com.uralhalil.zapu.model.Currency;
 import com.uralhalil.zapu.model.Property;
+import com.uralhalil.zapu.repository.CategoryRepository;
+import com.uralhalil.zapu.repository.CityRepository;
 import com.uralhalil.zapu.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,39 +20,57 @@ public class PropertyService {
     @Autowired
     private PropertyRepository propertyRepository;
 
-    public Boolean create(Property property) {
-        if (property == null)
-            return false;
-        property.setId(UUID.randomUUID().toString());
-        propertyRepository.save(property);
-        return true;
+    @Autowired
+    private CityRepository cityRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    public void propertyInit() {
+        create(Property.builder()
+                .city(cityRepository.findByName("Antalya").get())
+                .category(categoryRepository.findByName("konut").get())
+                .title("test")
+                .id(UUID.randomUUID().toString())
+                .price(100.00)
+                .currency(Currency.TL)
+                .build());
     }
 
-    public Property read(String id) {
+    public Property create(Property property) {
+        Property existing = null;
+        try {
+            existing = read(property.getId());
+        } catch (NotFoundException exception) {
+
+        }
+        if (existing != null) {
+            return null;
+        }
+        return propertyRepository.save(property);
+    }
+
+    public Property read(String id) throws NotFoundException {
         if (StringUtils.isEmpty(id))
-            return null;
-        Optional<Property> optionalProperty = propertyRepository.findById(id);
-        if (!optionalProperty.isPresent())
-            return null;
-        return optionalProperty.get();
+            throw new NotFoundException();
+        Optional<Property> optionalCategory = propertyRepository.findById(id);
+        if (optionalCategory == null || !optionalCategory.isPresent())
+            throw new NotFoundException("Property", "id", id);
+        return optionalCategory.get();
     }
 
     public List<Property> readAll() {
         return propertyRepository.findAll();
     }
 
-    public Boolean delete(String id) {
+    public Boolean delete(String id) throws NotFoundException {
         if (StringUtils.isEmpty(id))
             return false;
-        Property existingProperty = read(id);
-        if (existingProperty == null) {
-            return false;
-        }
-        propertyRepository.delete(existingProperty);
+        propertyRepository.delete(read(id));
         return true;
     }
 
-    public Property update(String id, Property property) {
+    public Property update(String id, Property property) throws NotFoundException {
         if (StringUtils.isEmpty(id))
             return null;
         Property existingProperty = read(id);
