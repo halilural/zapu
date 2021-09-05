@@ -5,10 +5,11 @@ import com.uralhalil.zapu.exception.QueryDSLPredicateBuildException;
 import com.uralhalil.zapu.predicate.QueryDSLPredicate;
 import com.uralhalil.zapu.predicate.util.SearchCriteria;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,19 +41,26 @@ public final class QueryDSLPredicatesBuilder<T> {
         if (searchCriteriaList.size() == 0) {
             return null;
         }
-        final List<BooleanExpression> predicates = new ArrayList<>();
+        final Map<String, BooleanExpression> predicates = new HashMap<>();
         QueryDSLPredicate<T> predicate;
+        AtomicReference<BooleanExpression> result = new AtomicReference<>();
         for (final SearchCriteria param : searchCriteriaList) {
             predicate = new QueryDSLPredicate<>(param);
             final BooleanExpression exp = predicate.getPredicate(entityClass);
             if (exp != null) {
-                predicates.add(exp);
+                if (predicates.containsKey(param.getKey())) {
+                    predicates.put(param.getKey(), exp);
+                    result.set(result.get().or(exp));
+                } else {
+                    predicates.put(param.getKey(), exp);
+                    if (result.get() == null) {
+                        result.set(exp);
+                    }else{
+                        result.set(result.get().and(exp));
+                    }
+                }
             }
         }
-        BooleanExpression result = predicates.get(0);
-        for (int i = 1; i < predicates.size(); i++) {
-            result = result.and(predicates.get(i));
-        }
-        return result;
+        return result.get();
     }
 }
