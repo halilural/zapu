@@ -120,7 +120,7 @@ public class TodoClass {
      * Case Study
      *  Category Service done!
      *  City Service done!
-     *  Property Service done! (needs to write unit and integration tests)
+     *  Property Service done!
      *  Property search service will be developed, hence rootUrl will be produced effectively using search terms.
      *  The app must be scalable and run without any cut to not affect end-users.
      *  AWS Service Infrastructure have to be explained if you cant have enough time to develop it.
