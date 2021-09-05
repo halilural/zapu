@@ -90,16 +90,16 @@ class PropertyServiceTest {
 
     @Test
     void givenProperty_WhenCreated_ThenItShouldBeCreated() throws NotFoundException {
-        RECORD_1.setCity(cityService.read(CITY_NAME_IZMIR));
-        RECORD_1.setCategory(categoryService.read(CATEGORY_NAME_BOOK));
+        RECORD_1.setCity(cityService.read(CITY_NAME_IZMIR).getId());
+        RECORD_1.setCategory(categoryService.read(CATEGORY_NAME_BOOK).getId());
         assertNotNull(propertyService.create(RECORD_1));
     }
 
     @Test
     void givenId_WhenReadById_ThenItShouldBeReturned() throws NotFoundException {
         // First, create property
-        RECORD_1.setCity(cityService.read(CITY_NAME_IZMIR));
-        RECORD_1.setCategory(categoryService.read(CATEGORY_NAME_BOOK));
+        RECORD_1.setCity(cityService.read(CITY_NAME_IZMIR).getId());
+        RECORD_1.setCategory(categoryService.read(CATEGORY_NAME_BOOK).getId());
         assertNotNull(propertyService.create(RECORD_1));
         //then read
         assertNotNull(propertyService.read(RECORD_1.getId()));
@@ -112,8 +112,8 @@ class PropertyServiceTest {
 
     @Test
     void givenNameAsPropertyNameWhenPropertyCreated_ThenItShouldBeCreatedWithoutTimeout() throws NotFoundException {
-        RECORD_1.setCity(cityService.read(CITY_NAME_IZMIR));
-        RECORD_1.setCategory(categoryService.read(CATEGORY_NAME_BOOK));
+        RECORD_1.setCity(cityService.read(CITY_NAME_IZMIR).getId());
+        RECORD_1.setCategory(categoryService.read(CATEGORY_NAME_BOOK).getId());
         assertTimeout(ofMillis(2000), () -> {
             propertyService.create(RECORD_1);
         });

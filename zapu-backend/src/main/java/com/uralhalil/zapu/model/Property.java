@@ -22,22 +22,20 @@ public class Property {
     private String id;
 
     @NotNull(message = "Kategori alanı zorunludur!")
-    @DBRef
-    @Field(name = "category")
-    private Category category;
+    @Field(name = "category_id")
+    private String category;
 
     @NotNull(message = "Başlık alanı zorunludur!")
     @Field(name = "title")
     private String title;
 
     @NotNull(message = "Şehir alanı zorunludur!")
-    @DBRef
-    @Field(name = "city")
-    private City city;
+    @Field(name = "city_id")
+    private String city;
 
     @NotNull(message = "Fiyat alanı zorunludur!")
     @Field(name = "price")
-    private Double price;
+    private double price;
 
     @NotNull(message = "Para birimi alanı zorunludur!")
     @Field(name = "currency")

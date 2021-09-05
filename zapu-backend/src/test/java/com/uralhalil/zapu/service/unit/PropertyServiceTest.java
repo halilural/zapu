@@ -55,12 +55,12 @@ class PropertyServiceTest {
     private void setup() {
         Category category = new Category(UUID.randomUUID().toString(), CATEGORY_NAME_BOOK);
         City city = new City(UUID.randomUUID().toString(), CITY_NAME_IZMIR);
-        RECORD_1.setCategory(category);
-        RECORD_1.setCity(city);
-        RECORD_2.setCategory(category);
-        RECORD_2.setCity(city);
-        RECORD_3.setCategory(category);
-        RECORD_3.setCity(city);
+        RECORD_1.setCategory(category.getId());
+        RECORD_1.setCity(city.getId());
+        RECORD_2.setCategory(category.getId());
+        RECORD_2.setCity(city.getId());
+        RECORD_3.setCategory(category.getId());
+        RECORD_3.setCity(city.getId());
     }
 
     @Test

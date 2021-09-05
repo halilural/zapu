@@ -1,12 +1,16 @@
 package com.uralhalil.zapu.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.uralhalil.zapu.exception.NotFoundException;
 import com.uralhalil.zapu.model.Currency;
 import com.uralhalil.zapu.model.Property;
 import com.uralhalil.zapu.repository.CategoryRepository;
 import com.uralhalil.zapu.repository.CityRepository;
 import com.uralhalil.zapu.repository.PropertyRepository;
+import com.uralhalil.zapu.repository.PropertySearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
@@ -21,6 +25,9 @@ public class PropertyService {
     private PropertyRepository propertyRepository;
 
     @Autowired
+    private PropertySearchRepository propertySearchRepository;
+
+    @Autowired
     private CityRepository cityRepository;
 
     @Autowired
@@ -28,8 +35,8 @@ public class PropertyService {
 
     public void propertyInit() {
         create(Property.builder()
-                .city(cityRepository.findByName("Antalya").get())
-                .category(categoryRepository.findByName("konut").get())
+                .city(cityRepository.findByName("Ankara").get().getId())
+                .category(categoryRepository.findByName("konut").get().getId())
                 .title("test")
                 .id(UUID.randomUUID().toString())
                 .price(100.00)
@@ -38,7 +45,7 @@ public class PropertyService {
     }
 
     public Property create(Property property) {
-        if(property == null)
+        if (property == null)
             return null;
         Property existing = null;
         try {
@@ -96,4 +103,9 @@ public class PropertyService {
         return optionalProperty.get();
     }
 
+    public Page<Property> search(Pageable pageable, BooleanExpression exp) {
+        if (exp == null)
+            return propertySearchRepository.findAll(pageable);
+        return propertySearchRepository.findAll(exp, pageable);
+    }
 }

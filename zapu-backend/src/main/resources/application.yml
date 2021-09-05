@@ -7,3 +7,4 @@ spring:
       database: zapu-db
       port: 27017
       host: localhost
+
