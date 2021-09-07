@@ -2,11 +2,8 @@ package com.uralhalil.zapu.repository;
 
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringPath;
-import com.uralhalil.zapu.model.Property;
-import com.uralhalil.zapu.model.QProperty;
-import com.uralhalil.zapu.payload.PropertyResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.uralhalil.zapu.model.entity.Property;
+import com.uralhalil.zapu.model.entity.QProperty;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;

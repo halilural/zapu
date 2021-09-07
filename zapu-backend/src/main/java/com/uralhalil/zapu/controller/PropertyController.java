@@ -1,11 +1,9 @@
 package com.uralhalil.zapu.controller;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.uralhalil.zapu.exception.NotFoundException;
 import com.uralhalil.zapu.exception.QueryDSLPredicateBuildException;
-import com.uralhalil.zapu.model.Property;
+import com.uralhalil.zapu.model.entity.Property;
 import com.uralhalil.zapu.payload.PropertyResponse;
-import com.uralhalil.zapu.predicate.builder.QueryDSLPredicatesBuilder;
 import com.uralhalil.zapu.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.net.UnknownHostException;
 
 
 @RestController
@@ -28,33 +24,17 @@ public class PropertyController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
-    public Page<PropertyResponse> search(Pageable pageable, @RequestParam(value = "search") String search) throws QueryDSLPredicateBuildException {
-        QueryDSLPredicatesBuilder builder = new QueryDSLPredicatesBuilder(Property.class);
-        if (search != null) {
-            Pattern pattern = Pattern.compile("([^=,]+):([^,]*)", Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(search);
-            while (matcher.find()) {
-                builder.with(matcher.group(1), ":", matcher.group(2));
-            }
-        }
-        BooleanExpression exp = builder.build();
-        return service.search(pageable, exp);
+    public Page<PropertyResponse> search(Pageable pageable, @RequestParam(value = "search") String search) throws QueryDSLPredicateBuildException, UnknownHostException, NoSuchMethodException {
+        return service.search(pageable, search);
     }
 
-    @GetMapping
-    public List<Property> getList() {
-        return service.readAll();
-    }
-
-    @GetMapping("/{id}")
-    public Property getSingle(@PathVariable("id") String id) {
-        Property property = null;
-        try {
-            property = service.read(id);
-        } catch (NotFoundException exception) {
-        }
-        return property;
-    }
+//    @RequestMapping(method = RequestMethod.GET, value = "/seo-interceptor")
+//    public ResponseEntity<?> seoInterceptor() throws IOException {
+//        String searchUrl = "http://localhost:8080/api/properties/search?search=title:test,title:halil";
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create(searchUrl));
+//        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
+//    }
 
     @PutMapping("/{id}")
     public Property updateSingle(@PathVariable("id") String id, @Valid @RequestBody Property property) throws NotFoundException {

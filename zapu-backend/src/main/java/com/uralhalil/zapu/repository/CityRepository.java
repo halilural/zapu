@@ -1,6 +1,6 @@
 package com.uralhalil.zapu.repository;
 
-import com.uralhalil.zapu.model.City;
+import com.uralhalil.zapu.model.entity.City;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

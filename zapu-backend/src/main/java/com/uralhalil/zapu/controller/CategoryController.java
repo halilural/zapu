@@ -1,7 +1,7 @@
 package com.uralhalil.zapu.controller;
 
 import com.uralhalil.zapu.exception.NotFoundException;
-import com.uralhalil.zapu.model.Category;
+import com.uralhalil.zapu.model.entity.Category;
 import com.uralhalil.zapu.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

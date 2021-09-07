@@ -1,4 +1,4 @@
-package com.uralhalil.zapu.model;
+package com.uralhalil.zapu.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,20 +8,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Builder
-@Document(collection = "category")
+import java.util.ArrayList;
+import java.util.Collection;
+
+@Document(collection = "role")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Role {
 
     @Id
     private String id;
 
-    @Field(name = "name")
-    private String name;
+    @Field(name = "role")
+    private String role;
 
-    public Category(String name) {
-        this.name = name;
-    }
 }

@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "a90e11dc-f06a-4a58-843a-15dcc02bd298",
+		"name": "Zapu",
+		"description": "Zapu Case Study",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/properties/search?search=title:test,title:halil",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"properties",
+						"search"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "title:test,title:halil"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "123456",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "halil",
+				"type": "string"
+			}
+		]
+	}
+}

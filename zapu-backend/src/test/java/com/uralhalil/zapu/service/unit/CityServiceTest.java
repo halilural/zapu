@@ -2,7 +2,7 @@ package com.uralhalil.zapu.service.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uralhalil.zapu.exception.NotFoundException;
-import com.uralhalil.zapu.model.City;
+import com.uralhalil.zapu.model.entity.City;
 import com.uralhalil.zapu.repository.CityRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

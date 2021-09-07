@@ -1,7 +1,7 @@
 package com.uralhalil.zapu.service;
 
-import com.uralhalil.zapu.model.Role;
-import com.uralhalil.zapu.model.User;
+import com.uralhalil.zapu.model.entity.Role;
+import com.uralhalil.zapu.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;

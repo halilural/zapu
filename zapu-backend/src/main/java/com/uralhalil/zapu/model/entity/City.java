@@ -1,4 +1,4 @@
-package com.uralhalil.zapu.model;
+package com.uralhalil.zapu.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

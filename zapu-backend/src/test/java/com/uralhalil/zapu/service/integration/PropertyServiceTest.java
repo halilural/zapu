@@ -2,8 +2,8 @@ package com.uralhalil.zapu.service.integration;
 
 import com.uralhalil.zapu.ZapuApplication;
 import com.uralhalil.zapu.exception.NotFoundException;
-import com.uralhalil.zapu.model.Currency;
-import com.uralhalil.zapu.model.Property;
+import com.uralhalil.zapu.model.entity.Currency;
+import com.uralhalil.zapu.model.entity.Property;
 import com.uralhalil.zapu.service.CategoryService;
 import com.uralhalil.zapu.service.CityService;
 import com.uralhalil.zapu.service.PropertyService;

@@ -1,7 +1,7 @@
 package com.uralhalil.zapu.controller;
 
 import com.uralhalil.zapu.exception.NotFoundException;
-import com.uralhalil.zapu.model.City;
+import com.uralhalil.zapu.model.entity.City;
 import com.uralhalil.zapu.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.uralhalil.zapu.controller;
 
-import com.uralhalil.zapu.model.User;
+import com.uralhalil.zapu.model.entity.User;
 import com.uralhalil.zapu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

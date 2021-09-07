@@ -1,6 +1,6 @@
 package com.uralhalil.zapu.service;
 
-import com.uralhalil.zapu.model.User;
+import com.uralhalil.zapu.model.entity.User;
 import com.uralhalil.zapu.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

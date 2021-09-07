@@ -1,6 +1,6 @@
 package com.uralhalil.zapu.payload;
 
-import com.uralhalil.zapu.model.Currency;
+import com.uralhalil.zapu.model.entity.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

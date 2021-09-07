@@ -2,10 +2,10 @@ package com.uralhalil.zapu.service.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uralhalil.zapu.exception.NotFoundException;
-import com.uralhalil.zapu.model.Category;
-import com.uralhalil.zapu.model.City;
-import com.uralhalil.zapu.model.Currency;
-import com.uralhalil.zapu.model.Property;
+import com.uralhalil.zapu.model.entity.Category;
+import com.uralhalil.zapu.model.entity.City;
+import com.uralhalil.zapu.model.entity.Currency;
+import com.uralhalil.zapu.model.entity.Property;
 import com.uralhalil.zapu.repository.PropertyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

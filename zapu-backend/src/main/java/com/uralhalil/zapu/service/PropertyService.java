@@ -2,27 +2,39 @@ package com.uralhalil.zapu.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.uralhalil.zapu.exception.NotFoundException;
-import com.uralhalil.zapu.model.Currency;
-import com.uralhalil.zapu.model.Property;
+import com.uralhalil.zapu.exception.QueryDSLPredicateBuildException;
+import com.uralhalil.zapu.model.entity.Currency;
+import com.uralhalil.zapu.model.entity.Property;
+import com.uralhalil.zapu.model.entity.RootUrlConfig;
+import com.uralhalil.zapu.model.pojo.UrlParam;
 import com.uralhalil.zapu.payload.PropertyResponse;
-import com.uralhalil.zapu.repository.CategoryRepository;
-import com.uralhalil.zapu.repository.CityRepository;
-import com.uralhalil.zapu.repository.PropertyRepository;
-import com.uralhalil.zapu.repository.PropertySearchRepository;
+import com.uralhalil.zapu.predicate.builder.QueryDSLPredicatesBuilder;
+import com.uralhalil.zapu.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class PropertyService {
+
+    private static final String REPOSITORY_PACKAGE_NAME = "com.uralhalil.zapu.repository";
+
+    @Autowired
+    private ApplicationContext context;
 
     @Autowired
     private PropertyRepository propertyRepository;
@@ -35,6 +47,9 @@ public class PropertyService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private RootUrlConfigRepository rootUrlConfigRepository;
 
     public void propertyInit() {
         create(Property.builder()
@@ -106,20 +121,49 @@ public class PropertyService {
         return optionalProperty.get();
     }
 
-    public Page<PropertyResponse> search(Pageable pageable, BooleanExpression exp) {
+    public Page<PropertyResponse> search(Pageable pageable, String search) throws QueryDSLPredicateBuildException, UnknownHostException, NoSuchMethodException {
+        QueryDSLPredicatesBuilder builder = new QueryDSLPredicatesBuilder(Property.class);
+        TreeMap<UrlParam, String> parameters = new TreeMap<>();
+        String rootUrl = "";
+        List<RootUrlConfig> configs = rootUrlConfigRepository.findAll();
+        boolean isUrlHasDuplicateKeys = false;
+        if (search != null) {
+            Pattern pattern = Pattern.compile("([^=,]+):([^,]*)", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(search);
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                String value = matcher.group(2);
+                builder.with(key, ":", value);
+                // add key to map for rootUrl
+                Optional<RootUrlConfig> rootUrlConfig;
+                rootUrlConfig = configs.stream()
+                        .filter(rootUrlConfig1 -> rootUrlConfig1.getParameterName()
+                                .equals(key)).findAny();
+                if (rootUrlConfig.isPresent()) {
+                    String val = parameters.put(new UrlParam(key, rootUrlConfig.get().getPriority()), value);
+                    if (val != null)
+                        isUrlHasDuplicateKeys = true;
+                }
+            }
+        }
 
+        //root url
+        if (isUrlHasDuplicateKeys)
+            rootUrl = null;
+        else {
+            rootUrl = generateRootUrl(parameters);
+        }
+        BooleanExpression exp = builder.build();
         Page<Property> propertyPage;
-
         if (exp == null)
             propertyPage = propertySearchRepository.findAll(pageable);
         else {
             propertyPage = propertySearchRepository.findAll(exp, pageable);
         }
-
         if (propertyPage == null)
             return null;
-
         int totalElements = (int) propertyPage.getTotalElements();
+        String finalRootUrl = rootUrl;
         return new PageImpl<PropertyResponse>(propertyPage.getContent()
                 .stream()
                 .map(property -> {
@@ -130,10 +174,45 @@ public class PropertyService {
                             .currency(property.getCurrency())
                             .price(property.getPrice())
                             .title(property.getTitle())
-                            //TODO: rootUrl will be implemented
+                            .rootUrl(finalRootUrl)
                             .build();
                     return response;
                 })
                 .collect(Collectors.toList()), pageable, totalElements);
+    }
+
+    private String generateRootUrl(TreeMap<UrlParam, String> parameters) throws NoSuchMethodException {
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder.append(InetAddress.getLoopbackAddress().getHostName());
+        List<RootUrlConfig> configs = rootUrlConfigRepository.findAll();
+        // Are priority being applied properly ? /category/city/e.t.c
+        //TODO: needs to sort it
+        for (Map.Entry<UrlParam, String> entry : parameters.entrySet()) {
+            Optional<RootUrlConfig> optionalRootUrlConfig = configs.stream()
+                    .filter(rootUrlConfig -> rootUrlConfig.getParameterName().equals(entry.getKey().getName()))
+                    .findAny();
+            RootUrlConfig rootUrlConfig = optionalRootUrlConfig.get();
+            String upParameter = rootUrlConfig.getUpParameterName();
+            UrlParam upUrlParam = new UrlParam(upParameter, rootUrlConfig.getPriority());
+            if (upParameter != null && !parameters.containsKey(upUrlParam)) {
+                return null;
+            }
+            // Dynamically call repository method and get name val
+            try {
+                Object o = context.getBean(Class.forName(REPOSITORY_PACKAGE_NAME + "." + rootUrlConfig.getRepositoryName()));
+                if (o instanceof CrudRepository) {
+                    CrudRepository crudRepository = (CrudRepository) o;
+                    Optional optional = crudRepository.findById(entry.getValue());
+                    if (optional.isPresent()) {
+                        Method getNameMethod = optional.get().getClass().getMethod("getName");
+                        String name = (String) getNameMethod.invoke(optional.get());
+                        urlBuilder.append("/" + name);
+                    }
+                }
+            } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return urlBuilder.toString();
     }
 }

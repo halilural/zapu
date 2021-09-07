@@ -1,6 +1,6 @@
 package com.uralhalil.zapu.repository;
 
-import com.uralhalil.zapu.model.Role;
+import com.uralhalil.zapu.model.entity.Role;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface RoleRepository extends MongoRepository<Role, String> {
