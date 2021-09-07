@@ -21,7 +21,6 @@ import org.thymeleaf.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -121,7 +120,7 @@ public class PropertyService {
         return optionalProperty.get();
     }
 
-    public Page<PropertyResponse> search(Pageable pageable, String search) throws QueryDSLPredicateBuildException, UnknownHostException, NoSuchMethodException {
+    public Page<PropertyResponse> search(Pageable pageable, String search, String url) throws QueryDSLPredicateBuildException, UnknownHostException, NoSuchMethodException {
         QueryDSLPredicatesBuilder builder = new QueryDSLPredicatesBuilder(Property.class);
         TreeMap<UrlParam, String> parameters = new TreeMap<>();
         String rootUrl = "";
@@ -151,7 +150,7 @@ public class PropertyService {
         if (isUrlHasDuplicateKeys)
             rootUrl = null;
         else {
-            rootUrl = generateRootUrl(parameters);
+            rootUrl = generateRootUrl(parameters, url);
         }
         BooleanExpression exp = builder.build();
         Page<Property> propertyPage;
@@ -181,12 +180,11 @@ public class PropertyService {
                 .collect(Collectors.toList()), pageable, totalElements);
     }
 
-    private String generateRootUrl(TreeMap<UrlParam, String> parameters) throws NoSuchMethodException {
+    private String generateRootUrl(TreeMap<UrlParam, String> parameters, String url) throws NoSuchMethodException {
         StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(InetAddress.getLoopbackAddress().getHostName());
+        urlBuilder.append(url);
         List<RootUrlConfig> configs = rootUrlConfigRepository.findAll();
         // Are priority being applied properly ? /category/city/e.t.c
-        //TODO: needs to sort it
         for (Map.Entry<UrlParam, String> entry : parameters.entrySet()) {
             Optional<RootUrlConfig> optionalRootUrlConfig = configs.stream()
                     .filter(rootUrlConfig -> rootUrlConfig.getParameterName().equals(entry.getKey().getName()))

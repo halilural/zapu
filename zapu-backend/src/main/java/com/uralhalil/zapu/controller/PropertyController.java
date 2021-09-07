@@ -8,11 +8,16 @@ import com.uralhalil.zapu.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.List;
 
 
 @RestController
@@ -24,8 +29,19 @@ public class PropertyController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
     @ResponseBody
-    public Page<PropertyResponse> search(Pageable pageable, @RequestParam(value = "search") String search) throws QueryDSLPredicateBuildException, UnknownHostException, NoSuchMethodException {
-        return service.search(pageable, search);
+    public ResponseEntity search(Pageable pageable, @RequestParam(value = "search") String search,HttpServletRequest request)
+            throws QueryDSLPredicateBuildException, UnknownHostException, NoSuchMethodException {
+        Page<PropertyResponse> page = service.search(pageable, search,request.getRequestURL().toString().split("/api")[0]);
+        String rootUrl = null;
+        if (page != null) {
+            List<PropertyResponse> list = page.getContent();
+            if (!list.isEmpty()) {
+                rootUrl = list.get(0).getRootUrl();
+            }
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(rootUrl));
+        return new ResponseEntity<>(page, headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
 //    @RequestMapping(method = RequestMethod.GET, value = "/seo-interceptor")
