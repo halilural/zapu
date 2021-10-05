@@ -3,7 +3,8 @@ Case Study Working for Interview
 
 # Next Releases
 
-1) Deployment app in AWS (manually)
-2) Deployment app in AWS with AWS CLoudflare
-3) Deployment app in AWS with Terraform
-4) Achieve Zero Day
+1) Use Apache Solr & Elastic Search for search service
+2) Deployment app in AWS (manually)
+3) Deployment app in AWS with AWS CLoudflare
+4) Deployment app in AWS with Terraform
+5) Achieve Zero Day
