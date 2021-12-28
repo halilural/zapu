@@ -1,6 +1,13 @@
 # zapu
 Case Study Working for Interview
 
+
+# Technologies
+
+1) Java SpringBoot
+2) MongoDB
+3) Docker
+
 # Next Releases
 
 1) Cache search service
